@@ -1,12 +1,12 @@
-import java.util.Stack;
+import java.util.*;
 
 public class StackQueue {
-	Stack<Int> enqueueStack;
-	Stack<Int> dequeueStack;
+	Stack<Integer> enqueueStack;
+	Stack<Integer> dequeueStack;
 
-	public StackQueue {
-		enqueueStack = new Stack<Int>();
-		dequeueStack = new Stack<Int>();
+	public StackQueue() {
+		enqueueStack = new Stack<Integer>();
+		dequeueStack = new Stack<Integer>();
 	}
 
 	public void enqueue(int elt) {
@@ -14,8 +14,8 @@ public class StackQueue {
 	}
 
 	public int dequeue() {
-		if(dequeueStack.empty(){ 
-			while(!enqueueStack.empty() {
+		if(dequeueStack.empty()){ 
+			while(!enqueueStack.empty()) {
 				int popElt = enqueueStack.pop();
 				dequeueStack.push(popElt);
 			}
