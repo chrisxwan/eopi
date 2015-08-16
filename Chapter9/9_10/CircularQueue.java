@@ -34,6 +34,9 @@ public class CircularQueue {
 	}
 
 	public int dequeue() {
+		if(numElements == 0) {
+			return 0;
+		}
 		int returnElt = queue[dequeueIndex];
 		queue[dequeueIndex] = 0;
 		dequeueIndex = (dequeueIndex+1) % size;
