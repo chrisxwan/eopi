@@ -1,4 +1,4 @@
-public class Problem15_12 {
+public class Chapter15 {
 	public static class BinaryTree {
 		public BinaryTree right;
 		public BinaryTree left;

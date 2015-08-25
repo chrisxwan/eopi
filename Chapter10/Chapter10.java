@@ -1,9 +1,11 @@
 import java.util.*;
 
-public class BalancedBinaryTree {
-	BalancedBinaryTree left;
-	BalancedBinaryTree right;
-	int value;
+public class Chapter10 {
+	public static class BalancedBinaryTree {
+		BalancedBinaryTree left;
+		BalancedBinaryTree right;
+		int value;
+	}
 	
 	/* Actual Binary Tree not implemented. Fields are included just for reference */
 
