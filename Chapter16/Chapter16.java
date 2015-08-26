@@ -61,7 +61,28 @@ public class Chapter16 {
 			}
 		}
 	}
-			
+		
+	public static ArrayList<ArrayList<Integer>> powerSet(ArrayList<Integer> set) {
+		ArrayList<ArrayList<Integer>> allSets = new ArrayList<ArrayList<Integer>>();
+		computePowerSet(set, allSets);
+		return allSets;
+	}
+
+	public static void computePowerSet(ArrayList<Integer> currentSet, ArrayList<ArrayList<Integer>> allSets) {
+		if(currentSet.size() == 0) {
+			ArrayList<Integer> emptySet = new ArrayList<Integer>();
+			allSets.add(emptySet);
+		} else {
+			int save = currentSet.remove(0);
+			computePowerSet(currentSet, allSets);
+			int preSize = allSets.size();
+			for(int i=0; i < preSize; i++) {
+				ArrayList<Integer> dup = new ArrayList<Integer>(allSets.get(i));
+				dup.add(save);
+				allSets.add(dup);
+			}
+		}
+	}
 
 	public static void main(String[] args) {
 		ArrayList<Integer> uniqueInts = new ArrayList<Integer>();
@@ -69,7 +90,7 @@ public class Chapter16 {
 		uniqueInts.add(2);
 		uniqueInts.add(3);
 		uniqueInts.add(4);
-		System.out.println(permute(uniqueInts));
+		System.out.println(powerSet(uniqueInts));
 	}
 
 }
