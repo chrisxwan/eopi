@@ -38,9 +38,38 @@ public class Chapter16 {
 		}
 		return true;
 	}
+	
+	// Problem 16.3
+	public static ArrayList<ArrayList<Integer>> permute(ArrayList<Integer> uniqueInts) {
+		ArrayList<Integer> currentPerm = new ArrayList<Integer>();
+		ArrayList<ArrayList<Integer>> allPerms = new ArrayList<ArrayList<Integer>>();
+		findPermutes(uniqueInts, currentPerm, allPerms);
+		return allPerms;
+	}
+
+	public static void findPermutes(ArrayList<Integer> uniqueInts, ArrayList<Integer> currentPerm, ArrayList<ArrayList<Integer>> allPerms) {
+		if(uniqueInts.size() == 0) {
+			ArrayList<Integer> perm = new ArrayList<Integer>(currentPerm);
+			allPerms.add(perm);
+		} else {
+			for(int i=0; i < uniqueInts.size(); i++) {
+				currentPerm.add(uniqueInts.get(i));
+				int save = uniqueInts.remove(i);
+				findPermutes(uniqueInts, currentPerm, allPerms);
+				currentPerm.remove(currentPerm.size()-1);
+				uniqueInts.add(i, save);
+			}
+		}
+	}
+			
 
 	public static void main(String[] args) {
-		System.out.println(queens(4));
+		ArrayList<Integer> uniqueInts = new ArrayList<Integer>();
+		uniqueInts.add(1);
+		uniqueInts.add(2);
+		uniqueInts.add(3);
+		uniqueInts.add(4);
+		System.out.println(permute(uniqueInts));
 	}
 
 }
