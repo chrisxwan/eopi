@@ -53,15 +53,16 @@ public class Chapter16 {
 			allPerms.add(perm);
 		} else {
 			for(int i=0; i < uniqueInts.size(); i++) {
-				currentPerm.add(uniqueInts.get(i));
-				int save = uniqueInts.remove(i);
-				findPermutes(uniqueInts, currentPerm, allPerms);
-				currentPerm.remove(currentPerm.size()-1);
-				uniqueInts.add(i, save);
+				currentPerm.add(uniqueInts.get(i)); //add this int to the current permutation
+				int save = uniqueInts.remove(i); // make sure it doesn't appear in future permutations
+				findPermutes(uniqueInts, currentPerm, allPerms); //find
+				currentPerm.remove(currentPerm.size()-1); //found unique permutation, so remove 
+				uniqueInts.add(i, save);//add back in to int bank
 			}
 		}
 	}
 		
+	// Problem 16.4
 	public static ArrayList<ArrayList<Integer>> powerSet(ArrayList<Integer> set) {
 		ArrayList<ArrayList<Integer>> allSets = new ArrayList<ArrayList<Integer>>();
 		computePowerSet(set, allSets);
@@ -83,14 +84,30 @@ public class Chapter16 {
 			}
 		}
 	}
+	
+	// Problem 16.5
+	public static ArrayList<ArrayList<Integer>> kSubset(int n, int k) {
+		ArrayList<Integer> curr = new ArrayList<Integer>();
+		ArrayList<ArrayList<Integer>> allSubsets = new ArrayList<ArrayList<Integer>>();
+		kSubsetCompute(n, k, 1, curr, allSubsets);
+		return allSubsets;
+	}
+
+	public static void kSubsetCompute(int n, int k, int start, ArrayList<Integer> curr, ArrayList<ArrayList<Integer>> allSubsets) {
+		if(k==0) {
+			ArrayList<Integer> save = new ArrayList<Integer>(curr);
+			allSubsets.add(save);
+		} else {
+			for(int i=start; i <= n; i++) {
+				curr.add(i);
+				kSubsetCompute(n, k-1, i+1, curr, allSubsets);
+				curr.remove(curr.size()-1);
+			}
+		}
+	}
 
 	public static void main(String[] args) {
-		ArrayList<Integer> uniqueInts = new ArrayList<Integer>();
-		uniqueInts.add(1);
-		uniqueInts.add(2);
-		uniqueInts.add(3);
-		uniqueInts.add(4);
-		System.out.println(powerSet(uniqueInts));
+		System.out.println(kSubset(5, 3));
 	}
 
 }
