@@ -106,8 +106,43 @@ public class Chapter16 {
 		}
 	}
 
+	//Problem 16.6
+	public static ArrayList<String> parens(int n) {
+		ArrayList<String> all = new ArrayList<String>();
+		findParensSmart(n, n,  "", all);
+		return all;
+	}
+
+	public static void findParensNaive(int n, String curr, ArrayList<String> all, HashSet<String> seen) {
+		if(n == 0) {
+			all.add(curr);
+		} else {
+			for(int i=0; i < curr.length()+1; i++) {
+				String newCurr = curr.substring(0, i) + "()" + curr.substring(i, curr.length());
+				if(!seen.contains(newCurr)) {
+					seen.add(newCurr);
+					findParensNaive(n-1, newCurr, all, seen);
+				}
+			}
+		}
+	}
+
+	public static void findParensSmart(int leftCount, int rightCount, String curr, ArrayList<String> all) {
+		if(leftCount == 0 && rightCount == 0) {
+			all.add(curr);
+		} else {
+			if(leftCount > 0) {
+				findParensSmart(leftCount-1, rightCount, curr + "(", all);
+			} 
+
+			if(leftCount < rightCount) {
+				findParensSmart(leftCount, rightCount-1, curr + ")", all);
+			}
+		}
+	}
+
 	public static void main(String[] args) {
-		System.out.println(kSubset(5, 3));
+		System.out.println(parens(4));
 	}
 
 }
