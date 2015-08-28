@@ -141,8 +141,47 @@ public class Chapter16 {
 		}
 	}
 
+	public static ArrayList<ArrayList<String>> palindromicDecomposition(String s) {
+		ArrayList<String> curr = new ArrayList<String>();
+		ArrayList<ArrayList<String>> decompositions = new ArrayList<ArrayList<String>>();
+		findPalindromicDecomposition(s, curr, decompositions);
+		return decompositions;
+	}
+
+	public static void findPalindromicDecomposition(String s, ArrayList<String> curr, ArrayList<ArrayList<String>> decompositions) {
+		if(s.equals("")) {
+			ArrayList<String> valid = new ArrayList<String>(curr);
+			decompositions.add(valid);
+		} else {
+			for(int i=0; i < s.length(); i++) {
+				String sub = s.substring(0, i+1);
+				if(isPalindrome(sub)) {
+					curr.add(sub);
+					findPalindromicDecomposition(s.substring(i+1), curr, decompositions);
+					curr.remove(sub);
+				}
+			}
+		}
+	}
+
+	public static boolean isPalindrome(String s) {
+		int len = s.length()-1;
+		boolean isPalindrome = true;
+		int counter = 0;
+		while(isPalindrome && len >= 0) {
+			if(!(s.substring(counter, counter+1).equals(s.substring(len, len+1)))) {
+				isPalindrome = false;
+			}
+			len--;
+			counter++;
+		}
+		return isPalindrome;
+	}
+
+
 	public static void main(String[] args) {
-		System.out.println(parens(4));
+		String s = "20218814444";
+		System.out.println(palindromicDecomposition(s));
 	}
 
 }
