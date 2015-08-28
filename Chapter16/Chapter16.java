@@ -178,7 +178,37 @@ public class Chapter16 {
 		return isPalindrome;
 	}
 
+	public static class BinaryTree {
+		BinaryTree right;
+		BinaryTree left;
 
+		public BinaryTree() {
+			this.right = null;
+			this.left = null;
+		}
+	}
+
+	public static ArrayList<BinaryTree> allBinaryTrees(int n) {
+		ArrayList<BinaryTree> allTrees = new ArrayList<BinaryTree>();
+		if(n == 0) {
+			allTrees.add(null);
+		} else {
+			for(int i=0; i < n; i++) {
+				ArrayList<BinaryTree> left = allBinaryTrees(i);
+				ArrayList<BinaryTree> right = allBinaryTrees(n-1-i);
+				for(int j=0; j < left.size(); j++) {
+					for(int k=0; k < right.size(); k++) {
+						BinaryTree root = new BinaryTree();
+						root.left = left.get(j);
+						root.right = right.get(k);
+						allTrees.add(root);
+					}
+				}
+			}	
+		}
+		return allTrees;
+	}
+		
 	public static void main(String[] args) {
 		String s = "20218814444";
 		System.out.println(palindromicDecomposition(s));
