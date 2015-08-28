@@ -178,6 +178,7 @@ public class Chapter16 {
 		return isPalindrome;
 	}
 
+	//Problem 16.8
 	public static class BinaryTree {
 		BinaryTree right;
 		BinaryTree left;
@@ -207,6 +208,60 @@ public class Chapter16 {
 			}	
 		}
 		return allTrees;
+	}
+
+	//Problem 16.9
+	public static boolean sudoku(int[][] grid) {
+		return solveSudoku(grid, 0, 0);
+	}
+
+	public static boolean solveSudoku(int[][] grid, int x, int y)  {
+		if(x > grid[0].length - 1) {
+			x = 0;
+			y++;
+		}
+		if(x > grid.length) {
+			return true;
+		} else {
+			if(grid[x][y] != 0) {
+				return solveSudoku(grid, x+1, y);
+			} else {
+				for(int i=1; i <= 9; i++) {
+					grid[x][y] = i;
+					if(isValid(grid, x, y)) {
+						if(solveSudoku(grid, x+1, y)) {
+							return true;
+						}
+					}
+				}
+			}
+		}
+		grid[x][y] = 0;
+		return false;
+	}
+
+	public static boolean isValid(int[][] grid, int x, int y) {
+		int set = grid[x][y];
+		for(int i=0; i < grid[0].length; i++) {
+			if(grid[x][i] == set && y != i) {
+				return false;
+			}
+		}
+		for(int i=0; i < grid.length; i++) {
+			if(grid[i][y] == set && i != x) {
+				return false;
+			}
+		}
+		for(int i=0; i < 3; i++) {
+			for(int j=0; j < 3; j++) {
+				int xCoord = x/3*3 + i;
+				int yCoord = y/3*3+j;
+				if(grid[xCoord][yCoord] == set && (xCoord != x && yCoord != y)) {
+					return false;
+				}
+			}
+		}
+		return true;
 	}
 		
 	public static void main(String[] args) {
