@@ -264,9 +264,49 @@ public class Chapter16 {
 		return true;
 	}
 		
+	//Problem 16.10
+	public static ArrayList<Integer> grayCode(int n) {
+		ArrayList<Integer> bank = new ArrayList<Integer>();
+		for(int i=0; i < Math.pow(2, n); i++) {
+			bank.add(i);
+		}
+		ArrayList<Integer> code = new ArrayList<Integer>();
+		computeGrayCode(bank, code);
+		return code;
+	}
+
+	public static boolean computeGrayCode( ArrayList<Integer> bank, ArrayList<Integer> code) {
+		if(bank.size() == 0) {
+			return (differByOne(code.get(0), code.get(code.size()-1)));
+		} else {
+			for(int i=0; i < bank.size(); i++) {
+				int save = bank.remove(i);
+				if(code.size() == 0 || differByOne(save, code.get(code.size()-1))) {
+					code.add(save);
+					if(computeGrayCode( bank, code)) {
+						return true;
+					}
+					code.remove(code.size()-1);
+				}
+				bank.add(i, save);
+			}
+		}
+		return false;
+	}
+
+	public static boolean differByOne(int x, int y) {
+		int z = x ^ y;
+		int counter = 0;
+		while(z != 0) {
+			z &= (z-1);
+			counter++;
+		}
+		return counter <= 1 ? true: false;
+	}
+			
+	
 	public static void main(String[] args) {
-		String s = "20218814444";
-		System.out.println(palindromicDecomposition(s));
+		System.out.println(grayCode(3));
 	}
 
 }
