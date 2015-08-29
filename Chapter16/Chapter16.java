@@ -304,7 +304,56 @@ public class Chapter16 {
 		return counter <= 1 ? true: false;
 	}
 			
+	public static class WeightedTree {
+		public Edge[] edges;
+	}
+
+	public static class Edge {
+		public WeightedTree to;
+		public int value;
+	}
 	
+	public static class Longest {
+		public int value;
+
+		public Longest() {
+			this.value = 0;
+		}
+
+		public void setValue(int v) {
+			this.value = v;
+		}
+	}
+
+	public static int diameter(WeightedTree t) {
+		Longest longest = new Longest();
+		findDiameter(longest, t);
+		return longest.value;
+	}
+
+	public static int findDiameter(Longest longest, WeightedTree t) {
+		if(t.edges.length > 0) {
+			ArrayList<Integer> pathLengths = new ArrayList<Integer>();
+			for(int i=0; i < t.edges.length; i++) {
+				int subTreePath = findDiameter(longest, t.edges[i].to);
+				pathLengths.add(subTreePath + t.edges[i].value);
+			}
+			int max = Integer.MIN_VALUE;
+			for(int i=0; i < pathLengths.size(); i++) { // **this nested for can be improved but the idea is right**
+				for(int j=i+1; j < pathLengths.size();j++) {
+					if(pathLengths.get(i) + pathLengths.get(j) > longest.value) {
+						longest.setValue(pathLengths.get(i) + pathLengths.get(j));
+					}
+				}
+				max = pathLengths.get(i) > max ? pathLengths.get(i) : max;
+			}
+			return max;
+		}
+		return 0;
+	}
+
+
+
 	public static void main(String[] args) {
 		System.out.println(grayCode(3));
 	}
