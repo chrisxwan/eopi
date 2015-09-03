@@ -106,6 +106,91 @@ public class Chapter19 {
 		return false;
 	}
 
+	public static class DirectedGraph {
+		public DirectedGraph[] vertices;
+		public String key;
+
+		public DirectedGraph(String key, int numNeighbors) {
+			this.key = key;
+			this.vertices = new DirectedGraph[numNeighbors];
+		}
+
+		public DirectedGraph(DirectedGraph g) {
+			this.key = g.key;
+			this.vertices = new DirectedGraph[g.vertices.length];
+		}
+	}
+
+	public static class Node<A> {
+		public Node<A> next;
+		public A v;
+
+		public Node(A v, Node<A> next) {
+			this.next = next;
+			this.v = v;
+		}
+
+		public Node(A v) {
+			this.v = v;
+		}
+	}
+
+	public static class MyQueue<A> {
+		public Node<A> head;
+		public Node<A> tail;
+
+		public void enqueue(A elt) {
+			if(head == null) {
+				head = tail = new Node<A>(elt);
+				tail = tail.next;
+			} else {
+				tail.next = new Node<A>(elt);
+				tail = tail.next;
+			}
+		}
+
+		public A dequeue() {
+			if(head != null) {
+				A ret = head.v;
+				head = head.next;
+				return ret;
+			}
+			return null;
+		}
+
+		public boolean empty() {
+			if(head == null) {
+				return true;
+			}
+			return false;
+		}
+	}
+
+	public static DirectedGraph copy(DirectedGraph g) {
+		HashMap<DirectedGraph, DirectedGraph> hash = new HashMap<DirectedGraph, DirectedGraph>();
+		DirectedGraph curr = g;
+		MyQueue<DirectedGraph> q = new MyQueue<DirectedGraph>();
+		DirectedGraph copy = new DirectedGraph(g);
+		hash.put(curr, copy);
+		q.enqueue(curr);
+		while(!q.empty()) {
+			curr = q.dequeue();
+			copy = hash.get(curr);
+			for(int i=0; i < curr.vertices.length; i++) {
+				DirectedGraph neighbor = curr.vertices[i];
+				if(!hash.containsKey(neighbor)) {
+					DirectedGraph newVertex = new DirectedGraph(neighbor);
+					hash.put(neighbor, newVertex);
+					q.enqueue(neighbor);
+					copy.vertices[i] = newVertex;
+				} else {
+					copy.vertices[i] = hash.get(neighbor);
+				}
+			}
+		}
+		return hash.get(g);
+	}
+
 	public static void main(String[] args) {
 		String[][] grid = new String[][]{{"B", "B", "B", "B"}, {"W", "B", "W", "B"},{"B", "W", "W", "B"}, {"B", "B", "B", "B"}};
 		String[][] newGrid = enclosed(grid);
