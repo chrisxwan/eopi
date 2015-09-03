@@ -191,6 +191,80 @@ public class Chapter19 {
 		return hash.get(g);
 	}
 
+	public static boolean isBipartite(Graph g) {
+		MyQueue<Graph> q = new MyQueue<Graph>();
+		HashMap<Graph, Integer> hash = new HashMap<Graph, Integer>();
+		q.enqueue(g);
+		hash.put(g, 1);
+		while(!q.empty()) {
+			Graph curr = q.dequeue();
+			int currColor = hash.get(curr);
+			for(int i=0; i < curr.vertices.length; i++) {
+				Graph next = curr.vertices[i];
+				if(!hash.containsKey(next)) {
+					hash.put(next, currColor * -1);
+					q.enqueue(next);
+				} else {
+					if(hash.get(next) == currColor) {
+						return false;
+					}
+				}	
+			}
+		}
+		return true;
+	}
+	
+	public static class Tuple<K, V> {
+		public K k;
+		public V v;
+
+		public Tuple(K k, V v) {
+			this.k = k;
+			this.v = v;
+		}
+	}
+
+	public static int transformString(HashSet<String> dict, String s, String t) {
+		MyQueue<Tuple<String, Integer>> q = new MyQueue<Tuple<String, Integer>>();
+		if(dict.contains(s)) {
+			Tuple<String, Integer> tuple = new Tuple<String, Integer>(s, 0);
+			q.enqueue(tuple);
+			dict.remove(s);
+		}
+		while(!q.empty()) {
+			Tuple<String, Integer> curr = q.dequeue();
+			if(curr.k == t) {
+				return curr.v;
+			} else {
+				String currString = curr.k; 
+				for(int i=0; i < currString.length(); i++) {
+					for(int j=0; j < 26; j++) {
+						String next = currString.substring(0, i) + ('a' + j) + currString.substring(i+1);
+						if(dict.contains(next)) {
+							Tuple<String, Integer> tuple = new Tuple<String, Integer>(next, curr.v+1);
+							q.enqueue(tuple);
+							dict.remove(next);
+						}
+					}
+				}
+			}
+		}
+		return -1;
+	}
+
+	public static boolean differByOne(String s1, String s2) {
+		if(s1.length() != s2.length()) {
+			return false;
+		}
+		int counter = 0;
+		for(int i=0; i < s1.length(); i++) {
+			if(s1.substring(i, i+1) != s2.substring(i, i+1)) {
+				counter++;
+			}
+		}
+		return counter==1;
+	}
+
 	public static void main(String[] args) {
 		String[][] grid = new String[][]{{"B", "B", "B", "B"}, {"W", "B", "W", "B"},{"B", "W", "W", "B"}, {"B", "B", "B", "B"}};
 		String[][] newGrid = enclosed(grid);
