@@ -77,7 +77,34 @@ public class Chapter19 {
 		}
 		return grid;
 	}
-			
+
+
+	//Problem 16.5
+	public static class Graph {
+		public boolean visited;
+		public Graph[] vertices;
+	}
+
+	public static boolean minConnected(Graph g) {
+		for(Graph v : g.vertices) {
+			if(hasCycle(v)) {
+				return false;
+			}
+		}
+		return true;
+	}
+
+	public static boolean hasCycle(Graph g) {
+		g.visited = true;
+		for(Graph v : g.vertices) {
+			if(v.visited) {
+				return true;
+			} else {
+				return hasCycle(v);
+			}
+		}
+		return false;
+	}
 
 	public static void main(String[] args) {
 		String[][] grid = new String[][]{{"B", "B", "B", "B"}, {"W", "B", "W", "B"},{"B", "W", "W", "B"}, {"B", "B", "B", "B"}};
