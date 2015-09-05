@@ -142,7 +142,6 @@ public class Chapter19 {
 		public void enqueue(A elt) {
 			if(head == null) {
 				head = tail = new Node<A>(elt);
-				tail = tail.next;
 			} else {
 				tail.next = new Node<A>(elt);
 				tail = tail.next;
@@ -252,6 +251,26 @@ public class Chapter19 {
 		return -1;
 	}
 
+	public static ArrayList<Integer> straightLine(int n) {
+		ArrayList<Integer> curr = new ArrayList<Integer>();
+		curr.add(1);
+		MyQueue<ArrayList<Integer>> q = new MyQueue<ArrayList<Integer>>();
+		while(!curr.contains(n)) {
+			for(int i=0; i < curr.size(); i++) {
+				for(int j=i; j < curr.size(); j++) {
+					if(!curr.contains(curr.get(i)+curr.get(j))) {
+						ArrayList<Integer> push = new ArrayList<Integer>(curr);
+						push.add(curr.get(i)+curr.get(j));
+						q.enqueue(push);
+					}
+				}
+			}
+			curr = q.dequeue();
+		}
+		return curr;
+	}
+
+
 	public static boolean differByOne(String s1, String s2) {
 		if(s1.length() != s2.length()) {
 			return false;
@@ -266,14 +285,7 @@ public class Chapter19 {
 	}
 
 	public static void main(String[] args) {
-		String[][] grid = new String[][]{{"B", "B", "B", "B"}, {"W", "B", "W", "B"},{"B", "W", "W", "B"}, {"B", "B", "B", "B"}};
-		String[][] newGrid = enclosed(grid);
-		for(int i=0; i < grid.length; i++) {
-			for(int j=0; j < grid[i].length; j++) {
-				System.out.print(newGrid[i][j]);
-			}
-			System.out.println();
-		}
-//		System.out.println(booleanMatrix(grid, 0, 0));
+		ArrayList<Integer> line = straightLine(15);
+		System.out.println(line);
 	}
 }
