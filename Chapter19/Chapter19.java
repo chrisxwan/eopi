@@ -286,6 +286,6 @@ public class Chapter19 {
 
 	public static void main(String[] args) {
 		ArrayList<Integer> line = straightLine(15);
-		System.out.println(line);
+		System.out.println(i);
 	}
 }
