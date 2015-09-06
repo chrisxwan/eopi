@@ -210,8 +210,23 @@ public class Chapter13 {
 			}
 		}
 	}
+
+	public static int closestPair(String[] words) {
+		HashMap<String, Integer> hash = new HashMap<String, Integer>();
+		int closest = Integer.MAX_VALUE;
+		for(int i=0; i < words.length; i++) {
+			if(hash.containsKey(words[i])) {
+				int pos = hash.get(words[i]);
+				closest = i-pos < closest ? i-pos : closest;
+			}
+			hash.put(words[i], i);
+		} 
+		return closest;
+	}
 					
 	public static void main(String[] args) {
-		System.out.println(palindrome("edified"));
+		String sentence = "All work and no play makes for no work no fun and no results";
+		String[] words = sentence.split(" ");
+		System.out.println(closestPair(words));
 	}
 }
