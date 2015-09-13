@@ -223,10 +223,110 @@ public class Chapter13 {
 		} 
 		return closest;
 	}
+
+	public static int[] smallestSubarray(String[] text, HashSet<String> search) {
+		int begin = 0;
+		int end = text.length;
+		int diff = Integer.MAX_VALUE;
+		int i=0;
+		int j=-1;
+		while(i < text.length) {
+			HashSet<String> notSeen = new HashSet<String>(search);
+			while(!notSeen.isEmpty() && j < text.length-1) {
+				j++;
+				if(notSeen.contains(text[j])) {
+					notSeen.remove(text[j]);
+				}
+			}
+			if(notSeen.isEmpty()) {
+				while(!search.contains(text[i])) {
+					i++;
+				}
+				if(j-i < diff) {
+					diff = j-i;
+					begin = i;
+					end = j;
+				}
+			}
+			i++;
+		}
+		int[] ret = {begin, end};
+		return ret;
+	}
+
+	public static int[] smallestSubarrayDistinct(String[] text, ArrayList<String> search) {
+		int i=0;
+		int j=0;
+		int begin = 0;
+		int end = text.length;
+		int diff = Integer.MAX_VALUE;
+		while(i < text.length && j < text.length) { 
+			Stack<String> s = new Stack<String>();
+			for(int k=search.size()-1; k >= 0; k--) {
+				s.push(search.get(k));
+			}
+			while(!s.empty() && j < text.length) {
+				if(text[j].equals(s.peek())) {
+					s.pop();
+				}
+				if(!s.empty()) {
+					j++;
+				}
+			}
+			if(s.empty()) {
+				while(!search.get(0).equals(text[i])) {
+					i++;
+				}
+				if(j-i < diff) {
+					diff = j-i;
+					begin = i;
+					end = j;
+				}
+				i++;
+			}
+		}
+		int[] ret = {begin, end};
+		return ret;
+	}
+
+	public static ArrayList<String> longestSubarrayDistinct(String[] arr) {
+		int beginIndex = 0;
+		int retLeft=0;
+		int retRight=0;
+		int maxLength = Integer.MIN_VALUE;
+		HashMap<String, Integer> after = new HashMap<String, Integer>();
+		HashSet<String> seen = new HashSet<String>();
+		String curr = arr[0];
+		for(int i=0; i < arr.length; i++) {
+			if(!arr[i].equals(curr)) {
+				after.put(curr, i);
+				curr = arr[i];
+			}
+			if(seen.contains(arr[i])) {
+				if(i - beginIndex > maxLength) {
+					maxLength = i - beginIndex;
+					retLeft = beginIndex;
+					retRight = i;
+				}
+				beginIndex = after.get(arr[i]);
+			} else {
+				seen.add(arr[i]);
+			}
+		}
+		ArrayList<String> ret = new ArrayList<String>();
+		for(int i=retLeft; i < retRight; i++) {
+			ret.add(arr[i]);
+		}
+		return ret;
+	}
+	
 					
 	public static void main(String[] args) {
-		String sentence = "All work and no play makes for no work no fun and no results";
-		String[] words = sentence.split(" ");
-		System.out.println(closestPair(words));
+		String textString = "f s f e t w e n w e x y z a b c e";
+		String[] text = textString.split(" ");
+		ArrayList<String> search = longestSubarrayDistinct(text);
+		for(int i=0; i < search.size(); i++) {
+			System.out.println(search.get(i));
+		}
 	}
 }
