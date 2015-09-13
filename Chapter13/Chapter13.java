@@ -319,14 +319,40 @@ public class Chapter13 {
 		}
 		return ret;
 	}
+
+	public static int containedRange(int[] arr) {
+		HashSet<Integer> set = new HashSet<Integer>();
+		int max = Integer.MIN_VALUE;
+		for(int i=0; i < arr.length; i++) {
+			set.add(arr[i]);
+		}
+		for(int i=0; i < arr.length; i++) {
+			if(set.contains(arr[i])) {
+				int counter=1;
+				int total = 1;
+				set.remove(arr[i]);
+				while(set.contains(arr[i]+counter)) {
+					set.remove(arr[i]+counter);
+					counter++;
+					total++;
+				}
+				counter = -1;
+				while(set.contains(arr[i]+counter)) {
+					set.remove(arr[i]+counter);
+					counter--;
+					total++;
+				}
+				if(total > max) {
+					max = total;
+				}
+			}
+		}
+		return max;
+	}
 	
 					
 	public static void main(String[] args) {
-		String textString = "f s f e t w e n w e x y z a b c e";
-		String[] text = textString.split(" ");
-		ArrayList<String> search = longestSubarrayDistinct(text);
-		for(int i=0; i < search.size(); i++) {
-			System.out.println(search.get(i));
-		}
+		int[] arr = {3, -2, 7, 9, 8, 1, 2, 0, -1, 5, 8};
+		System.out.println(containedRange(arr));
 	}
 }
