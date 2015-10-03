@@ -349,10 +349,214 @@ public class Chapter13 {
 		}
 		return max;
 	}
-	
-					
+
+	public static class MinHeap {
+		public int size;
+		public int[] heap;
+		public int currSize;
+
+		public MinHeap(int size) {
+			this.size = size;
+			this.heap = new int[size];
+			this.currSize = 0;
+		}
+
+		public int extractMin() {
+			int save = heap[0];
+			heap[0] = heap[currSize-1];
+			currSize--;
+			if(currSize != 0) {
+				bubbleDown(0);
+			}
+			return save;
+		}
+
+		public void insert(int n) {
+			if(currSize < size) {
+				heap[currSize] = n;
+				bubbleUp(currSize);
+				currSize++;
+			}
+		}
+
+		public void bubbleUp(int index) {
+			if(index != 0) {
+				if(heap[index] > heap[(index-1)/2]) {
+					int save = heap[index];
+					heap[index] = heap[(index-1)/2];
+					heap[(index-1)/2] = save;
+					bubbleUp((index-1)/2);
+				}
+			}
+		}
+
+		public void bubbleDown(int index) {
+			int minIndex;
+			if(2*index+2 >= currSize) {
+				if(2*index+1 >= currSize) {
+					return;
+				} else {
+					minIndex = 2*index+1;
+				}
+			} else {
+				if(heap[2*index+2] < heap[2*index+1]) {
+					minIndex = 2*index+2;
+				} else {
+					minIndex = 2*index+1;
+				}
+			}
+			if(heap[index] > heap[minIndex]) {
+				int save = heap[minIndex];
+				heap[minIndex] = heap[index];
+				heap[index] = save;
+				bubbleDown(minIndex);
+			}
+		}
+
+		public boolean notFull() {
+			return currSize < size;
+		}
+
+		public double average() {
+			double ret = 0;
+			if(notFull()) {
+				return 0.0;
+			}
+			for(int i=0; i < size; i++) {
+				ret += heap[i];
+			}
+			return ret / size;
+		}
+
+		public int peek() {
+			return heap[0];
+		}
+	}
+
+	public static class Score {
+		public int id;
+		public int score;
+	}
+
+	public static int averageScores(Score[] arr) {
+		HashMap<Integer, MinHeap> hash = new HashMap<Integer, MinHeap>();
+		for(int i=0; i < arr.length; i++) {
+			if(hash.containsKey(arr[i].id)) {
+				MinHeap m = hash.get(arr[i].id);
+				if(m.notFull()) {
+					m.insert(arr[i].score);
+				} else if(arr[i].score > m.peek()) {
+					m.extractMin();
+					m.insert(arr[i].score);
+				}
+			} else {
+				MinHeap m = new MinHeap(3);
+				m.insert(arr[i].score);
+			}
+		}
+		double highestAverage = 0;
+		int id = 0;
+		for(Map.Entry<Integer, MinHeap> entry : hash.entrySet()) {
+			double average = entry.getValue().average();
+			if(average > highestAverage) {
+				highestAverage = average;
+				id = entry.getKey();
+			}
+		}
+		return id;
+	}
+
+	public static ArrayList<String> stringDecomposition(String sentence, String[] words) {
+		ArrayList<String> ret = new ArrayList<String>();
+		int wordLength = words.length > 0 ? words[0].length() : 0;
+		if(wordLength == 0) {
+			return ret;
+		}
+		HashSet<String> h = new HashSet<String>();
+		for(String word : words) {
+			h.add(word);
+		}
+		for(int i=0; i < sentence.length() - (wordLength); i++) {
+			String substr = sentence.substring(i, i+wordLength);
+			if(h.contains(substr)) {
+				int index = i + wordLength;
+				HashSet<String> copy = new HashSet<String>(h);
+				String s = "";
+				while(!copy.isEmpty() && copy.contains(substr) && index + wordLength <= sentence.length()) {
+					s += substr;
+					copy.remove(substr);
+					substr = sentence.substring(index, index + wordLength);
+					index = index + wordLength;
+				}
+				if(copy.isEmpty()) {
+					ret.add(s);
+				}
+			}
+		}
+		return ret;
+	}
+
+	public static class Pair {
+		public String a;
+		public String b;
+		
+		public Pair(String a, String b) {
+			this.a = this.a;
+			this.b = this.b;
+		}
+
+		public boolean comp(Pair p) {
+			if((a.equals(p.a) && b.equals(p.b)) || (a.equals(p.b) && b.equals(p.a))) {
+				return true;
+			}
+			return false;
+		}
+	}
+
+	public static Pair highestAffinity(String[] logs) {
+		HashMap<String, ArrayList<String>> users = new HashMap<String, ArrayList<String>>();
+		HashMap<Pair, Integer> pairs = new HashMap<Pair, Integer>();
+		for(int i=0; i < logs.length; i++) {
+			String[] view = logs[i].split(",");
+			if(!users.containsKey(view[1])) {
+				ArrayList<String> pages = new ArrayList<String>();
+				pages.add(view[0]);
+				users.put(view[1], pages);
+			} else { //contains the user
+				ArrayList<String> pages = users.get(view[1]);
+				if(!pages.contains(view[0])) {
+					for(int j=0; j < pages.size(); j++) {
+						Pair p1 = new Pair(pages.get(j), view[0]);
+						Pair p2 = new Pair(view[0], pages.get(j));
+						if(pairs.containsKey(p1)) {
+							pairs.put(p1, pairs.get(p1) + 1);
+						} else if(pairs.containsKey(p2)) {
+							pairs.put(p2, pairs.get(p2) + 1);
+						} else { //contains neither pair
+							pairs.put(p1, 1);
+						}
+					}
+					pages.add(view[0]);
+				}
+			}
+		}
+		int max = Integer.MIN_VALUE;
+		Pair ret = new Pair("", "");
+		for(Pair key : pairs.keySet()) {
+			if(pairs.get(key) > max) {
+				ret = key;
+			}
+		}
+		return ret;
+	}
+						
+				
 	public static void main(String[] args) {
-		int[] arr = {3, -2, 7, 9, 8, 1, 2, 0, -1, 5, 8};
-		System.out.println(containedRange(arr));
+		String sentence = "amanaplanacanalpanama";
+		String[] words = {"can", "apl", "ana"};
+		ArrayList<String> a = stringDecomposition(sentence, words);
+		for(String s : a) {
+			System.out.println(a);
+		}
 	}
 }
