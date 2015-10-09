@@ -1,3 +1,5 @@
+import java.util.*;
+
 public class Chapter14 {
 	// [5,13,17,_,_,_,_,_] and [3,7,11,19]
 	public static int[] mergeSortInPlace(int[] a, int[] b) {
@@ -50,7 +52,88 @@ public class Chapter14 {
 		return ret;
 	}
 
+	public static class Point {
+		public int point;
+		public boolean open;
 
+		public Point (int point, boolean open) {
+			this.point = point;
+			this.open = open;
+		}
+	}
+
+	public static class EndPoint {
+		public Point left;
+		public Point right;
+
+		public EndPoint(Point left, Point right) {
+			this.left = left;
+			this.right = right;
+		}
+	}
+
+	public static void  mergeSort(EndPoint[] arr, EndPoint[] tmp, int left, int right) {
+		if(left < right) {
+			int mid = (left + right) / 2;
+			mergeSort(arr, tmp, left, mid);
+			mergeSort(arr, tmp, mid+1, right);
+			merge(arr, tmp, left, mid+1, right);
+		}
+	}
+
+	public static void merge(EndPoint[] arr, EndPoint[] tmp, int left, int right, int rightEnd) {
+		int leftEnd = right-1;
+		int k = left;
+		int total = rightEnd-left+1;
+
+		while(left <= leftEnd && right <= rightEnd) {
+			if(arr[left].left.point < arr[right].left.point) {
+				tmp[k++] = arr[left++];
+			} else {
+				tmp[k++] = arr[right++];
+			}
+		}
+
+		while(left <= leftEnd) {
+			tmp[k++] = arr[left++];
+		}
+
+		while (right <= rightEnd) {
+			tmp[k++] = arr[right++];
+		}
+
+		for(int i=0; i < total; i++, rightEnd--) {
+			arr[rightEnd] = tmp[rightEnd];
+		}
+	}
+
+	public static ArrayList<EndPoint> intervalUnion(EndPoint[] arr) {
+		ArrayList<EndPoint> ret = new ArrayList<EndPoint>();
+		EndPoint[] tmp = new EndPoint[arr.length+1];
+		mergeSort(arr, tmp, 0, arr.length-1);
+		Point currLeft = arr[0].left;
+		Point currRight = arr[0].right;
+		for(int i=0; i < arr.length; i++) {
+			if(arr[i].left.point > currRight.point) {
+				EndPoint interval = new EndPoint(currLeft, currRight);
+				ret.add(interval);
+				currLeft = arr[i].left;
+				currRight = arr[i].right;
+			} else {
+				if(arr[i].right.point > currRight.point || 
+				  (!arr[i].right.open && arr[i].right.point == currRight.point)) {
+				  	currRight = arr[i].right;
+				}
+				if(arr[i].left.point == currLeft.point && !arr[i].left.open) {
+					currLeft = arr[i].left;
+				}
+			}
+		}
+		return ret;
+	}
+
+			
+		
 
 	public static void main(String[] args) {
 		int[][] input = {{-4,-1},{0,2},{3,6},{7,9},{11,12},{14,17}};
