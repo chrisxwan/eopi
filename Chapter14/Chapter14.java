@@ -109,7 +109,7 @@ public class Chapter14 {
 
 	public static ArrayList<EndPoint> intervalUnion(EndPoint[] arr) {
 		ArrayList<EndPoint> ret = new ArrayList<EndPoint>();
-		EndPoint[] tmp = new EndPoint[arr.length+1];
+		EndPoint[] tmp = new EndPoint[arr.length];
 		mergeSort(arr, tmp, 0, arr.length-1);
 		Point currLeft = arr[0].left;
 		Point currRight = arr[0].right;
@@ -132,8 +132,33 @@ public class Chapter14 {
 		return ret;
 	}
 
-			
-		
+	public static void sort(int[] arr) {
+		int[] ret = new int[arr.length];
+		HashMap<Integer, Integer> hash = new HashMap<Integer, Integer>();
+		for(int i=0; i < arr.length; i++) {
+			int put = hash.containsKey(arr[i]) ? hash.get(arr[i]) + 1 : 1;
+			hash.put(arr[i], put);
+		}
+		HashMap<Integer, Integer> index = new HashMap<Integer, Integer>();
+		int offset = 0;
+		for(int key : hash.keySet()) {
+			index.put(key, offset);
+			offset += hash.get(key);
+		}
+		int currIndex = 0;
+		int size = arr.length;
+		while(size > 0) {
+			int curr = arr[currIndex];
+			int pos = index.get(curr);
+			index.put(curr, index.get(curr) + 1);
+			int temp = arr[pos];
+			arr[pos] = curr;
+			arr[currIndex] = temp;
+			if (pos == currIndex)
+				currIndex++;
+			size--;
+		}
+	}
 
 	public static void main(String[] args) {
 		int[][] input = {{-4,-1},{0,2},{3,6},{7,9},{11,12},{14,17}};
