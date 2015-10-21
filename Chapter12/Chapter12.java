@@ -17,6 +17,26 @@ public class Chapter12 {
 		return lowestIndex;
 	}
 
+	public static boolean search2d(int[][] sorted, int target) {
+		int numRows = sorted.length;
+		int numCols = sorted[0].length;
+		int currCol = 0;
+		int currRow = numRows-1;
+		while(numRows != 0 && numCols != 0) {
+			if (sorted[currRow][currCol] > target) {
+				numRows--;
+				currRow--;
+			} else if(sorted[currRow][currCol] < target) {
+				numCols--;
+				currCol++;
+			} else {
+				return true;
+			}
+		}
+		return false;
+	}
+			
+
 	public static void main(String[] args) {
 		int[] arr = {-14, -10, 2, 108, 108, 243, 285, 285, 285, 401};
 		System.out.println(firstOccurrence(arr, 285));
